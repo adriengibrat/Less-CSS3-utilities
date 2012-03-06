@@ -1,0 +1,113 @@
+/**
+ * Inspired from http://tympanus.net/Tutorials/CSSButtonsPseudoElements/
+ * 
+ * degraded on: ie6, ie7, ie8
+ * validated on: Chrome 18, Firefox 10.0.2, Safari 5.1.1, Opera 11.50
+ */
+
+// charset for text icons (source file UTF-8 encoded with BOM)
+@charset "UTF-8";
+
+// box-shadow (helper)
+.box-shadow ( @boxShadow ) {
+	-webkit-box-shadow: @boxShadow;
+	   -moz-box-shadow: @boxShadow;
+	     -o-box-shadow: @boxShadow;
+	        box-shadow: @boxShadow;
+}
+// border-radius (helper)
+.border-radius ( @radius: 5px ) {
+	-webkit-border-radius: @radius;
+	   -moz-border-radius: @radius;
+	     -o-border-radius: @radius;
+	        border-radius: @radius;
+}
+// vertical-gradient (helper)
+.vertical-gradient ( @startColor, @endColor ) {
+	background-image: -webkit-linear-gradient(bottom, @endColor 0%, @startColor 100%);
+	background-image:    -moz-linear-gradient(bottom, @endColor 0%, @startColor 100%);
+	background-image:     -ms-linear-gradient(bottom, @endColor 0%, @startColor 100%);
+	background-image:      -o-linear-gradient(bottom, @endColor 0%, @startColor 100%);
+	background-image:         linear-gradient(bottom, @endColor 0%, @startColor 100%);
+}
+// background-text-color (helper)
+.background-text-color ( @color ) when ( lightness( @color ) >= 60% ) {
+ 	background-color: @color;
+ 	color: black;
+}
+.background-text-color ( @color ) when ( lightness( @color ) < 60% ) {
+ 	background-color: @color;
+ 	color: white;
+}
+
+// simple button3d
+.button3d ( @color: #3bb3e0, @radius: 5px ) {
+	padding: 10px;
+	position: relative;
+	zoom: 1;
+	text-decoration: none;
+	// ie outline
+	outline: none;
+	.background-text-color( @color );
+	.vertical-gradient( fade( @color, 20% ), darken( @color, 10% ) );
+	.box-shadow( inset 0px 1px 0px lighten( @color, 30% )~"," 0px 5px 0px darken( @color, 30% )~"," 0px 10px 5px fade( darken( @color, 50% ), 90% ) );
+	.border-radius( @radius );
+	&:active {
+		top: 3px;
+		.background-text-color( darken( @color, 10% ) );
+		.box-shadow( inset 0px 1px 0px lighten( @color, 30% )~"," inset 0px -1px 0px darken( @color, 30% )~"," 0px 3px 3px fade( darken( @color, 50% ), 80% ) );
+	}
+}
+// base-icon button3d (helper)
+.button3d ( @color, @radius, @icon: null, @_: null ) {
+	padding-right: 50px;
+	// ie < 9 hack (degraded)
+	//padding-right: 10px\9;
+	// ie < 8 hack (degraded) -todo- why the helle does it not work on ie8?
+	*padding-right: 10px;
+	&:before {
+		position: absolute;
+		content: "";
+		display: block;
+		top: 50%;
+		right: 15px;
+		width: 20px;
+		height: 20px;
+		margin-top: -9px;
+		background-color: darken( @color, 10% );
+		.border-radius( 50% );
+		.box-shadow( inset 0px 1px 0px darken( @color, 30% )~"," 0px 1px 0px lighten( @color, 30% ) );
+	}
+	//opera hack
+	x:-o-prefocus,&:before {
+		margin-top: 0;
+	}
+	&:active {
+		&:before {
+			margin-top: -12px;
+			.box-shadow( inset 0px 1px 0px lighten( @color, 30% )~"," 0px 3px 0px darken( @color, 30% )~"," 0px 6px 3px darken( @color, 20% ) );
+		}
+		//opera hack
+		x:-o-prefocus,&:before {
+			margin-top: -3px;
+		}
+	}
+}
+// text-icon button3d
+.button3d ( @color, @radius, @icon, @icon-color: #fff ) when ( isstring( @icon ) ) {
+	&:before {
+		content: @icon;
+		color: @icon-color;
+		font-weight: bold;
+		text-align: center;
+	}
+}
+// image-icon button3d
+.button3d ( @color, @radius, @icon, @position: center center ) when ( isurl( @icon ) ) {
+	&:before {
+		content: "";
+		background-image: @icon;
+		background-repeat: no-repeat;
+		background-position: @position;
+	}
+}
