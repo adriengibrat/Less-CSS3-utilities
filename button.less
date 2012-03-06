@@ -53,7 +53,7 @@
 	.border-radius( @radius );
 	&:active {
 		top: 3px;
-		.background-text-color( darken( @color, 10% ) );
+		background-color: darken( @color, 10% );
 		.box-shadow( inset 0px 1px 0px lighten( @color, 30% )~"," inset 0px -1px 0px darken( @color, 30% )~"," 0px 3px 3px fade( darken( @color, 50% ), 80% ) );
 	}
 }
