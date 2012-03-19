@@ -3,8 +3,41 @@
 	<head>
 		<meta charset="utf-8">
 		<title>LESS 3D Buttons</title>
-		<link rel="stylesheet/less" type="text/css" href="style.less">
-		<script src="https://raw.github.com/cloudhead/less.js/master/dist/less-1.2.2.min.js" type="text/javascript"></script>
+		<script src="less-1.2.2.min.js" type="text/javascript"></script>
+		<script type="text/javascript" src="jquery-1.7.1.min.js"></script>
+		<script type="text/javascript">
+			$(function(){
+				// Apply demo styles
+				$('pre.demo').each(function(){
+					var self = $( this )
+						, parser = new( less.Parser)().parse(self.text(), function (error, tree) {
+							if ( error )
+								return console.log( error );;
+							try {
+								var css = tree.toCSS();
+							} catch ( error ) {
+								return console.log( error );
+							}
+							var style = document.createElement('style');
+							style.type = 'text/css';
+							if (style.styleSheet) {
+								style.styleSheet.cssText = css;
+							} else {
+								style.innerHTML = css;
+							}
+							self.after( style );
+						})
+						;
+				});
+				// Add markup tags
+				$('p.demo').after(function(){
+					var buttons = $( '[class^=button]', this ).clone()
+						, html  = buttons.wrapAll( '<div/>' ).parent().html()
+						;
+					return $('<pre/>').text( html.replace( /(<\/\w+>)</g, "$1\r\n<" ) ).before( '<h3>Markup</h3>' );
+				});
+			});
+		</script>
 		<style type="text/css">
 			body { margin-top: 1.0em;background-color: #888;font-family: Helvetica, Arial, sans-serif;color: #000; }
 			#container { margin: 0 auto;width: 700px; }
@@ -16,8 +49,6 @@
 			pre { background: #000; color: #fff; padding: 15px;}
 			a { color: #000; }
 			.footer { text-align:center; padding-top:30px; font-style: italic; }
-			
-			#button-demo a { margin-left: .5em; }
 		</style>
 	</head>
 	<body>
@@ -30,31 +61,92 @@
 
 			<h2>Demos</h2>
 
-			<h3>3D buttons</h3>
-			<p id="button-demo">
+			<h3>Simple 3D buttons</h3>
+			<p class="demo">
+				<span class="button">Button Default</span>
 				Bouttons are text-aligned.
-				<a href="#" class="button">Button Default</a>
-				<a href="#" class="button-grey">Button Grey</a>
-				<br>
-				<a href="#" class="button-ico">Button Character icon</a>
-				<a href="#" class="button-sprite">Button Sprite icon</a>
+				<br/>
+				<button class="button-grey">Button Grey</button>
+				Customize button appearance easily.
+				<br/>
+				<a class="button-round">Button Round</a>
+				Use any markup you like.
 			</p>
 
-			<h3>Code</h3>
-			<pre>
-@charset "UTF-8";
-@import url(button.less);
+			<h4>Less CSS</h4>
+			<pre class="demo">@import url(button.less);
 .button{
 	.button3d();
 }
 .button-grey{
 	.button3d( #bbb );
 }
+.button-round{
+	.button3d( brown, 20px );
+}</pre>
+
+			<h3>With text icons</h3>
+			<p class="demo">
+				<a class="button-ico">Button Character icon</a>
+				Single text character as icon
+				<br/>
+				<span class="button-ico right">Button Character icon (right)</span>
+				Change icon position with one class
+				<br/>
+				<a class="button-ico square">Button Character icon (square)</a>
+				Or use square icon
+			</p>
+
+			<h3>Less CSS</h3>
+			<pre class="demo">@import url(button.less);
+@charset "UTF-8";
 .button-ico{
 	.button3d( #E83A25, 2px, "€" );
+}</pre>
+
+			<h3>With image icons</h3>
+			<p class="demo">
+				<button class="button-pic">Button Sprite icon</button>
+				Single image as icon
+				<br/>
+				<button class="button-sprite right">Button Sprite icon (right)</button>
+				 Even sprites
+				<br/>
+				<button class="button-sprite square">Button Sprite icon (square)</button>
+				With same class to modify button
+			</p>
+
+			<h3>Less CSS</h3>
+			<pre class="demo">@import url(button.less);
+.button-pic{
+	.button3d( #93C28C, 20px, url(icon.gif) );
 }
 .button-sprite{
-	.button3d( #93C28C, 20px, url([long sprite url]), -45px  3px );
+	.button3d( #93C28C, 10px, url(sprite.png), -45px  3px );
+}
+</pre>
+
+			<h3>With counter icons</h3>
+			<p class="demo">
+				<a class="button-counter">Button Counter</a>
+				<span class="button-counter">Button Counter</span>
+				<button class="button-counter">Button Counter</button>
+				<a class="button-counter-alpha">Button Counter</a>
+				<span class="button-counter-alpha">Button Counter</span>
+				<button class="button-counter-alpha">Button Counter</button>
+			</p>
+
+			<h3>Less CSS</h3>
+			<pre class="demo">@import url(button.less);
+.button-counter{
+	.button3d( #669199, 4px, counter );
+}
+.button-counter-alpha{
+	.button3d( wheat, 0px, counter, lower-alpha );
+}
+// reset counter
+.button-counter + .button-counter-alpha{
+	counter-reset: button;
 }</pre>
 
 			<h2>Download</h2>
