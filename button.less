@@ -53,6 +53,8 @@
 	.vertical-gradient( fade( @color, 20% ), darken( @color, 10% ) );
 	.box-shadow( inset 0px 1px 0px lighten( @color, 30% )~"," 0px 5px 0px darken( @color, 30% )~"," 0px 10px 5px fade( darken( @color, 50% ), 90% ) );
 	.border-radius( @radius );
+	// ie < 8 hack (degraded)
+	*font-size: 16px;
 	&:active {
 		top: 3px;
 		background-color: darken( @color, 10% );
@@ -65,9 +67,11 @@
 	// ie < 8 hack (degraded)
 	*padding-left: 10px;
 	&:before {
-		position: absolute;
 		content: "";
+		position: absolute;
 		display: block;
+		// ie < 8 hack (degraded)
+		*display: none;
 		top: 50%;
 		left: 15px;
 		width: 20px;
@@ -84,9 +88,14 @@
 		.border-radius( 50% );
 		.box-shadow( inset 0px 1px 0px darken( @color, 30% )~"," 0px 1px 0px lighten( @color, 30% ) );
 	}
+	&:before {
+		top: 50%;
+	}
 	&.right {
 		padding-left: 10px;
 		padding-right: 50px;
+		// ie < 8 hack (degraded)
+		*padding-right: 10px;
 		&:before {
 			left: auto;
 			right: 15px;
